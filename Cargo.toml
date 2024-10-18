@@ -1,0 +1,12 @@
+[package]
+name = "MiniProject7_ShiyueZhou"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rand = "0.8"
+rusqlite = "0.29.0"
+
+[lib]
+name = "DBFunc"
+path = "lib.rs"
