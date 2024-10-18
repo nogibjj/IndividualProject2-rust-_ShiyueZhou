@@ -3,10 +3,10 @@
 [![Rust CI/CD Pipeline](https://github.com/nogibjj/MiniProject7-rust-_ShiyueZhou/actions/workflows/rust.yml/badge.svg)](https://github.com/nogibjj/MiniProject7-rust-_ShiyueZhou/actions/workflows/rust.yml)
 
 ## Summary
-# Project Summary: Rust Command-Line Utility#
+# Project Summary: Rust Command-Line Utility
 This project is a Rust-based command-line tool designed to perform basic mathematical operations, specifically multiplying two numbers. Using the clap library, the project allows users to input two integers via the command line and receive the product of those numbers as the output. The focus of the project is on leveraging Rust for efficient, lightweight command-line utilities.  
 
-# Project Structure#
+# Project Main RUST Structure
 ```plaintext
 .
 ├── src
@@ -16,7 +16,7 @@ This project is a Rust-based command-line tool designed to perform basic mathema
 ```
 
 
-# Key Components:#  
+# Key Components:
 **<p style="font-size:20px;"> 1. Rust Command-Line Tool:</p>**
 
 The main functionality is built around a command-line utility that multiplies two numbers provided as arguments.  
@@ -43,14 +43,14 @@ The all target in the Makefile runs tasks such as formatting, linting, testing, 
 A CI/CD pipeline is integrated using GitHub Actions. This pipeline automates code formatting (cargo fmt), linting (cargo clippy), testing (cargo test), and building the project (cargo build).  
 The pipeline ensures that the code meets quality standards every time changes are made.  
 
-## Technologies Used:##
+## Technologies Used:
 * Rust: The core language used to implement the command-line tool.
 * Clap: A Rust library for argument parsing.
 * Cargo: Used for building, testing, and managing dependencies.
 * Makefile: Automates common development tasks like running the program, formatting, and testing.
 * GitHub Actions: For automating continuous integration and testing processes.
 
-## User Guide:##
+## User Guide:
 [Contributing Guidelines](user_guide.md)
 
 ## References
