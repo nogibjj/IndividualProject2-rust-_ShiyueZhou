@@ -7,18 +7,20 @@
 This project is a Rust-based command-line tool designed to perform basic mathematical operations, specifically multiplying two numbers. Using the clap library, the project allows users to input two integers via the command line and receive the product of those numbers as the output. The focus of the project is on leveraging Rust for efficient, lightweight command-line utilities.  
 
 # Project Structure#
+```plaintext
 .
 ├── src
 │   └── main.rs      # The main Rust source file
 ├── Cargo.toml       # Rust project manifest
 └── README.md        # Project documentation
+```
 
 
 # Key Components:#  
 **<p style="font-size:20px;"> 1. Rust Command-Line Tool:</p>**
 
 The main functionality is built around a command-line utility that multiplies two numbers provided as arguments.  
-The tool uses the clap library to parse command-line inputs, allowing users to run the tool with cargo run -- num1 num2, where num1 and num2 are the integers to be multiplied.   
+The tool uses the clap library to parse command-line inputs, allowing users to run the tool with **cargo run -- num1 num2**, where num1 and num2 are the integers to be multiplied.   
 
 
 **<p style="font-size:20px;"> 2. Mathematical Operations:</p>**
