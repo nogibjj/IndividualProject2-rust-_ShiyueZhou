@@ -6,7 +6,4 @@ edition = "2021"
 [dependencies]
 rand = "0.8"
 rusqlite = "0.29.0"
-
-[lib]
-name = "DBFunc"
-path = "lib.rs"
+clap = { version = "4.0", features = ["derive"] }

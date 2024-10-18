@@ -21,4 +21,11 @@ run:
 release:
 	cargo build --release
 
-all: format lint test run
+# 'all' target to format, lint, test, and run
+all: 
+	@echo "Running the 'all' target"
+	# Call the make targets for format, lint, test, and run
+	make format
+	make lint
+	make test
+	make run
