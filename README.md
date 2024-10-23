@@ -38,10 +38,17 @@ The arguments are handled in a structured way, ensuring the user input is valida
 A Makefile is included to automate tasks such as running the program, testing, formatting code, and linting. This simplifies development and testing workflows.
 The all target in the Makefile runs tasks such as formatting, linting, testing, and executing the program in sequence.
 
-**<p style="font-size:20px;"> 5.CI/CD Pipeline:</p>**
+**<p style="font-size:20px;"> 5.CI/CD Pipeline: with binary file as an artifact in CI/CD</p>**
 
 A CI/CD pipeline is integrated using GitHub Actions. This pipeline automates code formatting (cargo fmt), linting (cargo clippy), testing (cargo test), and building the project (cargo build).  
-The pipeline ensures that the code meets quality standards every time changes are made.  
+The pipeline ensures that the code meets quality standards every time changes are made. 
+```plaintext
+    - name: Upload Binary Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MiniProject7-rust-_ShiyueZhou
+        path: target/release/MiniProject7-rust-_ShiyueZhou
+``` 
 
 ## Technologies Used:
 * Rust: The core language used to implement the command-line tool.
