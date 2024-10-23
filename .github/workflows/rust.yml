@@ -1,36 +1,41 @@
 name: Rust CI/CD Pipeline
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
-env:
-  CARGO_TERM_COLOR: always
+    branches:
+      - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions-rs/toolchain@v1
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
       with:
-          toolchain: stable
-          profile: minimal
-          components: clippy, rustfmt
-          override: true
-    - name: update linux
-      run: sudo apt update 
-    - name: update Rust
-      run: make install
-    - name: Check Rust versions
-      run: make rust-version
+        toolchain: stable
+        override: true
+
+    - name: Check
+      run: cargo check
+
     - name: Format
-      run: make format
-    - name: Lint
-      run: make lint
+      run: cargo fmt
+
     - name: Test
-      run: make test
-    - name: pull repository
-      run: git pull
-    # - name: add rust logs
-    #   run: make generate_and_push
+      run: cargo test
+
+    - name: Release
+      run: cargo build --release
+
+    - name: Upload Binary Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: MiniProject7-rust-_ShiyueZhou
+        path: target/release/MiniProject7-rust-_ShiyueZhou
     
