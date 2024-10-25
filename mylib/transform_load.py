@@ -29,3 +29,4 @@ def load(dataset="data/murder_2015_final.csv"):
     conn.commit()
     conn.close()
     return "Murder2015.db"
+

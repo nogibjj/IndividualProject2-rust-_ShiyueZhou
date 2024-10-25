@@ -1,78 +1,128 @@
 use csv::ReaderBuilder;
-use reqwest::blocking::get;
+use reqwest;
 use rusqlite::{params, Connection, Result};
-use std::fs::{self, File};
-use std::io::{self, Write};
+use std::error::Error;
+use std::fs;
+use std::fs::File;
+use std::io::Write;
 use std::path::Path;
 
-// Make functions public for use in main.rs
+pub mod extract {
+    use super::*;
 
-/// Download data from a URL and save to a specified file path.
-pub fn extract(url: &str, file_path: &str) -> io::Result<()> {
-    let response = get(url).expect("Failed to make request");
-    if response.status().is_success() {
+    /// Function to download data from a URL and save it to a file
+    pub async fn extract(url: &str, file_path: &str) -> Result<(), Box<dyn Error>> {
         if let Some(parent) = Path::new(file_path).parent() {
             fs::create_dir_all(parent)?;
         }
-
-        let mut file = File::create(file_path)?;
-        let content = response.bytes().expect("Failed to read bytes");
-        file.write_all(&content)?;
-        println!("File successfully downloaded to {}", file_path);
-    } else {
-        eprintln!(
-            "Failed to retrieve the file. HTTP Status Code: {}",
-            response.status()
-        );
+        let response = reqwest::get(url).await?;
+        if response.status().is_success() {
+            let content = response.bytes().await?;
+            let mut file = fs::File::create(file_path)?;
+            file.write_all(&content)?;
+            println!("File successfully downloaded to {}", file_path);
+        } else {
+            println!(
+                "Failed to retrieve the file. HTTP Status Code: {}",
+                response.status()
+            );
+        }
+        Ok(())
     }
-    Ok(())
 }
 
-/// Load data from a CSV file into an SQLite database.
-pub fn load(dataset: &str) -> Result<(), Box<dyn std::error::Error>> {
-    let conn = Connection::open("Murder2015.db")?;
+pub mod database {
+    use super::*;
 
-    // Adjust schema if you need `state_s`
-    conn.execute("DROP TABLE IF EXISTS Murder2015", [])?;
-    conn.execute(
-        "CREATE TABLE Murder2015 (city TEXT, state_s TEXT, murders2014 INT, murders2015 INT, change INT)",
-        [],
-    )?;
-
-    let mut rdr = ReaderBuilder::new().from_path(dataset)?;
-    let mut insert_stmt = conn.prepare("INSERT INTO Murder2015 VALUES (?, ?, ?, ?, ?)")?;
-
-    for result in rdr.records() {
-        let record = result?;
-        insert_stmt.execute(params![
-            record[0].to_string(),
-            record[1].to_string(),
-            record[2].parse::<i32>().unwrap_or(0), // Default to 0 on parse failure
-            record[3].parse::<i32>().unwrap_or(0),
-            record[4].parse::<i32>().unwrap_or(0),
-        ])?;
+    /// Connect to the SQLite database
+    pub fn connect_to_db(db_path: &str) -> Result<Connection> {
+        Connection::open(db_path)
     }
-    println!("Data loaded into Murder2015.db");
-    Ok(())
+
+    /// Execute an SQL query on the provided connection
+    pub fn execute_query(conn: &Connection, query: &str) -> Result<()> {
+        conn.execute_batch(query)?;
+        println!("Query executed successfully.");
+        Ok(())
+    }
+
+    pub fn create_data(conn: &Connection) -> Result<()> {
+        conn.execute(
+            "INSERT INTO Murder2015 (city, state, murders2014, murders2015, change) 
+            VALUES (?1, ?2, ?3, ?4, ?5)",
+            params!["city1", "NC", 1, 2, 1],
+        )?;
+        let mut stmt = conn.prepare("SELECT * FROM Murder2015 WHERE city = ?1")?;
+        let rows = stmt.query_map(params!["city1"], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })?;
+        println!("create: ");
+        for row in rows {
+            println!("{:?}", row.unwrap());
+        }
+        Ok(())
+    }
+
+    pub fn read_data(conn: &Connection) -> Result<()> {
+        let mut stmt = conn.prepare("SELECT * FROM Murder2015 LIMIT 10")?;
+        let rows = stmt.query_map([], |row| {
+            Ok((row.get::<_, String>(0)?, row.get::<_, String>(1)?))
+        })?;
+        println!("read 10 from Murder2015:");
+        for row in rows {
+            println!("{:?}", row.unwrap());
+        }
+        Ok(())
+    }
+
+    pub fn update_data(conn: &Connection) -> Result<()> {
+        conn.execute(
+            "UPDATE Murder2015 SET murders2015 = ?1, change = ?2 WHERE city = ?3",
+            params![3, 2, "city2"],
+        )?;
+        println!("Update Success");
+        Ok(())
+    }
+
+    pub fn delete_data(conn: &Connection) -> Result<()> {
+        conn.execute("DELETE FROM Murder2015 WHERE city = ?1", params!["city2"])?;
+        println!("Delete Success");
+        Ok(())
+    }
 }
 
-/// Execute a SQL query and print results.
-pub fn execute_query(query: &str) -> Result<()> {
-    let conn = Connection::open("Murder2015.db")?;
-    let mut stmt = conn.prepare(query)?;
-    let mut rows = stmt.query([])?;
+pub mod load {
+    use super::*;
 
-    println!("Query results:");
-    while let Some(row) = rows.next()? {
-        let city: String = row.get(0)?;
-        let state: String = row.get(1)?;
-        let murders2014: i32 = row.get(2)?;
-        let murders2015: i32 = row.get(3)?;
-        let change: i32 = row.get(4)?;
-        println!(
-            "city: {}, state: {}, murders2014: {}, murders2015: {}, change: {}",
-            city, state, murders2014, murders2015, change
-        );
+    pub fn load(dataset: &str) -> Result<(), Box<dyn Error>> {
+        let file = File::open(dataset)?;
+        let mut rdr = ReaderBuilder::new().from_reader(file);
+        let conn = Connection::open("Murder2015.db")?;
+
+        conn.execute("DROP TABLE IF EXISTS Murder2015", [])?;
+        conn.execute(
+            "CREATE TABLE Murder2015 (
+                city TEXT,
+                state TEXT,
+                murders2014 INTEGER,
+                murders2015 INTEGER,
+                change INTEGER
+            )",
+            [],
+        )?;
+
+        let mut insert_stmt = conn.prepare("INSERT INTO Murder2015 VALUES (?, ?, ?, ?, ?)")?;
+        for result in rdr.records() {
+            let record = result?;
+            insert_stmt.execute(params![
+                record.get(0).unwrap(),
+                record.get(1).unwrap(),
+                record.get(2).unwrap().parse::<i32>().unwrap(),
+                record.get(3).unwrap().parse::<i32>().unwrap(),
+                record.get(4).unwrap().parse::<i32>().unwrap(),
+            ])?;
+        }
+        println!("Data successfully loaded into Murder2015.db");
+        Ok(())
     }
-    Ok(())
 }
