@@ -36,6 +36,7 @@ jobs:
     - name: Upload Binary Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: MiniProject7-rust-_ShiyueZhou
-        path: target/release/MiniProject7-rust-_ShiyueZhou
+        name: IndividualProject2-rust-_ShiyueZhou
+        path: target/release/IndividualProject2-rust-_ShiyueZhou
+
     
