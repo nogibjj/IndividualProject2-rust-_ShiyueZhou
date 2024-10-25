@@ -1,26 +1,97 @@
-// use rand::seq::SliceRandom;  // For shuffling or picking random elements from slices
-// use rand::thread_rng;         // Provides thread-local random number generator
+mod lib;
 
-// fn get_random_number_from_list(list: &[i32]) -> Option<i32> {
-//     let mut rng = thread_rng();  // Create a random number generator
-//     list.choose(&mut rng).copied()  // Pick a random number and return it, wrapped in Option
-// }
-use clap::Parser; // Import the Parser trait from clap
+use clap::Parser;
+use std::time::Instant;
+use sysinfo::{ProcessExt, System, SystemExt};
 
-#[derive(Parser, Debug)]
-#[command(version = "1.0", about = "Sum two numbers")]
+#[derive(Parser)]
+#[command(name = "example")]
+#[command(about = "A Rust program to extract, load, and query data with memory and runtime tracking", long_about = None)]
 struct Args {
-    num1: i64,
-    num2: i64,
+    #[arg(
+        short,
+        long,
+        default_value = "https://raw.githubusercontent.com/fivethirtyeight/data/refs/heads/master/murder_2016/murder_2015_final.csv"
+    )]
+    url: String,
+
+    #[arg(short, long, default_value = "data/murder_2015_final.csv")]
+    file_path: String,
 }
 
-fn multiply(x: i64, y: i64) -> i64 {
-    x * y
+fn run_main_logic(args: &Args) -> Result<(), Box<dyn std::error::Error>> {
+    println!("URL: {}", args.url);
+    println!("File path: {}", args.file_path);
+
+    // Start the timer
+    let start_time = Instant::now();
+    let mut system = System::new_all();
+    system.refresh_all();
+
+    // Get the process ID for memory measurement
+    let pid = sysinfo::get_current_pid().expect("Failed to get process ID");
+    let initial_memory = system.process(pid).map_or(0, |process| process.memory());
+
+    // Run main process stages
+    lib::extract(&args.url, &args.file_path).map_err(|e| {
+        eprintln!("Error during data extraction: {}", e);
+        e
+    })?;
+
+    let murder_execute_query = "
+        WITH murder_change_rate AS (
+            SELECT city, state_s,
+                   NULLIF(change, 0) * 1.0 / NULLIF(murders2014, 0) AS Murder_Change_Rate
+            FROM Murder2015
+        )
+        SELECT a.state_s, AVG(b.Murder_Change_Rate) AS average_murdersChange_perState
+        FROM Murder2015 a
+        LEFT JOIN murder_change_rate b ON a.city = b.city AND a.state_s = b.state_s
+        GROUP BY a.state_s
+        ORDER BY average_murdersChange_perState DESC;
+    ";
+    lib::execute_query(murder_execute_query).map_err(|e| {
+        eprintln!("Error during SQL execution: {}", e);
+        e
+    })?;
+
+    lib::load(&args.file_path).map_err(|e| {
+        eprintln!("Error during data loading: {}", e);
+        e
+    })?;
+
+    // Refresh system information to get updated memory usage
+    system.refresh_all();
+    let final_memory = system.process(pid).map_or(0, |process| process.memory());
+
+    // Calculate elapsed time and memory usage
+    let elapsed_time = start_time.elapsed();
+    let memory_used = final_memory.saturating_sub(initial_memory);
+
+    println!("Process completed in: {:.2?}", elapsed_time);
+    println!("Memory used: {} KB", memory_used);
+
+    Ok(())
 }
 
-fn main() {
-    let args = Args::parse(); // Parse the command-line arguments
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args = Args::parse();
+    run_main_logic(&args)
+}
 
-    let result = multiply(args.num1, args.num2);
-    println!("The multiplication of num1 and num2: {}", result);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_run_main_logic() {
+        let args = Args {
+            url: String::from("https://raw.githubusercontent.com/fivethirtyeight/data/refs/heads/master/murder_2016/murder_2015_final.csv"),
+            file_path: String::from("data/murder_2015_final.csv"),
+        };
+
+        let result = run_main_logic(&args);
+        println!("{:?}", result);
+        assert!(result.is_ok(), "Expected Ok result, got Err: {:?}", result);
+    }
 }

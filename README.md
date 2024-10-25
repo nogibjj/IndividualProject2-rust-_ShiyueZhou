@@ -17,45 +17,28 @@ This project is a Rust-based command-line tool designed to perform basic mathema
 
 
 # Key Components:
-**<p style="font-size:20px;"> 1. Rust Command-Line Tool:</p>**
+1. Command-Line Argument Parsing with clap:
 
-The main functionality is built around a command-line utility that multiplies two numbers provided as arguments.  
-The tool uses the clap library to parse command-line inputs, allowing users to run the tool with **cargo run -- num1 num2**, where num1 and num2 are the integers to be multiplied.   
+The Args struct holds two command-line arguments, url and file_path, with default values for each.
+The #[derive(Parser)] macro from clap allows parsing these arguments directly from the command line, or it falls back on the default values.
 
+2. Refactoring with run_main_logic:
 
-**<p style="font-size:20px;"> 2. Mathematical Operations:</p>**
+The main logic has been refactored into run_main_logic, making it testable.
+This function accepts args and executes lib::extract, lib::execute_query, and lib::load functions.
 
-A simple Rust function is used to multiply the two numbers and print the result in a user-friendly format. 
-The utility showcases Rust's efficiency and strong type safety, ensuring correct handling of integer inputs. 
+3. Memory and Time Calculation:
 
-**<p style="font-size:20px;"> 3. Argument Parsing with clap:</p>**
+The sysinfo crate tracks memory usage before and after run_main_logic, and the Instant type measures the elapsed time. This section should provide accurate memory usage and timing output for the process.
 
-The project uses the clap crate for parsing command-line arguments, making it easy for users to interact with the program by passing numbers directly through the terminal.
-The arguments are handled in a structured way, ensuring the user input is validated and processed correctly.
+4. main Function Setup:
 
-**<p style="font-size:20px;"> 4. Makefile for Automation:</p>**
+The main function uses tokio::main to handle asynchronous calls and calls run_main_logic with parsed command-line arguments.
 
-A Makefile is included to automate tasks such as running the program, testing, formatting code, and linting. This simplifies development and testing workflows.
-The all target in the Makefile runs tasks such as formatting, linting, testing, and executing the program in sequence.
+5. Testing the Main Logic:
 
-**<p style="font-size:20px;"> 5.CI/CD Pipeline: with binary file as an artifact in CI/CD</p>**
-
-A CI/CD pipeline is integrated using GitHub Actions. This pipeline automates code formatting (cargo fmt), linting (cargo clippy), testing (cargo test), and building the project (cargo build).  
-The pipeline ensures that the code meets quality standards every time changes are made. 
-```plaintext
-    - name: Upload Binary Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: MiniProject7-rust-_ShiyueZhou
-        path: target/release/MiniProject7-rust-_ShiyueZhou
-``` 
-
-## Technologies Used:
-* Rust: The core language used to implement the command-line tool.
-* Clap: A Rust library for argument parsing.
-* Cargo: Used for building, testing, and managing dependencies.
-* Makefile: Automates common development tasks like running the program, formatting, and testing.
-* GitHub Actions: For automating continuous integration and testing processes.
+In the tests module, the test_run_main_logic function creates a mock Args struct with the actual murder data values.
+This approach effectively tests run_main_logic in a controlled environment, simulating the command-line behavior.
 
 ## User Guide:
 [Contributing Guidelines](user_guide.md)

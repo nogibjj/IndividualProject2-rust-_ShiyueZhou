@@ -36,3 +36,31 @@ all:
 	make lint
 	make test
 	make run
+
+
+
+install_py:
+	pip install --upgrade pip &&\
+		pip install -r requirements.txt
+
+test_py:
+	python -m pytest -vv --cov=main --cov=mylib test_*.py
+
+format_py:	
+	black *.py 
+
+lint_py:
+	#disable comment to test speed
+	#pylint --disable=R,C --ignore-patterns=test_.*?py *.py mylib/*.py
+	#ruff linting is 10-100X faster than pylint
+	ruff check *.py mylib/*.py
+
+container-lint_py:
+	docker run --rm -i hadolint/hadolint < Dockerfile
+
+refactor_py: format lint
+
+deploy_py:
+	#deploy goes here
+		
+all_py: install_py lint_py test_py format_py deploy_py
