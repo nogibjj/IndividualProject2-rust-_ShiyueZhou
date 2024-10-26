@@ -64,3 +64,8 @@ deploy_py:
 	@echo "Deployment steps go here"
 
 all_py: install_py format_py lint_py test_py deploy_py
+
+
+# generate performance report
+generate_report: generate_report.sh
+	./generate_report.sh
