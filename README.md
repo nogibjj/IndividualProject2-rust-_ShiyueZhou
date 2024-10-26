@@ -81,25 +81,25 @@ The project includes comprehensive Rust source code, demonstrating a deep unders
 ## 2. Use of Large Language Model (LLM)
 Throughout the development of this Rust-based ETL command-line tool, ChatGPT provided support at various stages, helping streamline code writing, troubleshoot issues, and implement best practices. Here’s a breakdown of how ChatGPT specifically contributed to the process:
 
-### 1. Code Structuring and Best Practices
+### 【1】. Code Structuring and Best Practices
 ChatGPT suggested ways to modularize the Rust code, enhancing project maintainability and readability. It guided me in structuring core modules like `extract`, `database`, and `load` for maximum reusability, following Rust’s idiomatic practices. ChatGPT also recommended efficient techniques for handling error propagation and memory management, which were essential for this performance-focused project.
 
-### 2. Syntax Assistance
+### 【2】. Syntax Assistance
 Rust’s syntax, especially around memory management, error handling, and lifetimes, can be complex. ChatGPT provided syntax support, especially with Rust-specific structures like `Result`, `Option`, and async functions. It also clarified the nuances of borrowing and ownership, ensuring the code was both efficient and free from memory issues.
 
-### 3. Optimizing Asynchronous Code
+### 【3】. Optimizing Asynchronous Code
 For data extraction and HTTP requests, ChatGPT assisted with using the `tokio` and `reqwest` libraries for asynchronous operations. It suggested structuring async functions to maximize performance and avoid common pitfalls in concurrency, which was essential for handling large datasets efficiently.
 
-### 4. SQLite CRUD Operations
+### 【4】. SQLite CRUD Operations
 ChatGPT guided the implementation of SQLite operations using `rusqlite`, including the best way to set up and execute parameterized CRUD (Create, Read, Update, Delete) queries. This guidance improved the database interaction layer and ensured it adhered to security and efficiency best practices.
 
-### 5. Memory and Runtime Tracking
+### 【5】. Memory and Runtime Tracking
 To help meet performance goals, ChatGPT provided examples for tracking runtime and memory usage using the `sysinfo` library. This guidance enabled me to implement accurate performance monitoring, which was essential for tracking the tool’s efficiency across ETL stages.
 
-### 6. GitHub CI/CD Integration
+### 【6】. GitHub CI/CD Integration
 ChatGPT also assisted in setting up a GitHub CI/CD pipeline to automate testing, linting, and building an optimized release binary. This setup ensured a consistent, high-quality codebase by catching errors early and generating an optimized binary ready for deployment.
 
-### 7. Markdown Documentation
+### 【7】. Markdown Documentation
 Lastly, ChatGPT supported the drafting of `README.md` and user guide documentation. It provided clear language for describing project functionality, dependencies, and step-by-step usage, ensuring the documentation was both user-friendly and professional.
 
 By utilizing ChatGPT throughout the coding process, I could adopt Rust best practices, improve code efficiency, and streamline development, making the project more robust and maintainable.
@@ -120,7 +120,7 @@ The project includes a GitHub Actions workflow for automation of essential devel
 - **Python CI/CD (pycicd):** Manages dependencies, testing, and linting for Python-based components.
 - **Rust CI/CD (rust):**Tests, builds, and lints the Rust components, ensuring adherence to best practices.
 
-## 5. Video
+## 6. Video
 
 
 ## RustSQL User Guide:
