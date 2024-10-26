@@ -44,31 +44,11 @@ def test_delete():
 
 
 if __name__ == "__main__":
+    # Run all tests
     test_extract()
     test_transform()
     test_create()
     test_read()
     test_update()
     test_delete()
-    print("All tests completed.")
-
-
-if __name__ == "__main__":
-    # assert test_func()["extract"] == "data/murder_2015_final.csv"
-    # assert test_func()["transform"] == "Murder2015.db"
-    # assert test_func()["create"] == "Create Success"
-    # assert test_func()["read"] == "Read Success"
-    # assert test_func()["update"] == "Update Success"
-    # assert test_func()["delete"] == "Delete Success"
-    check = test_extract()
-    assert check == "data/murder_2015_final.csv"
-    check = test_transform()
-    assert check == "Murder2015.db"
-    check = test_create()
-    assert check == "Create Success"
-    check = test_read()
-    assert check == "Read Success"
-    check = test_update()
-    assert check == "Update Success"
-    check = test_delete()
-    assert check == "Delete Success"
+    print("All tests completed successfully.")

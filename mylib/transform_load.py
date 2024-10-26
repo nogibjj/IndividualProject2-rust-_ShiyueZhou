@@ -22,11 +22,12 @@ def load(dataset="data/murder_2015_final.csv"):
     conn = sqlite3.connect("Murder2015.db")
     c = conn.cursor()
     c.execute("DROP TABLE IF EXISTS Murder2015")
-    c.execute("""CREATE TABLE Murder2015 
-              (city, state, murders2014, murders2015, change)""")
+    c.execute(
+        """CREATE TABLE Murder2015 
+              (city, state, murders2014, murders2015, change)"""
+    )
     # insert
     c.executemany("INSERT INTO Murder2015 VALUES (?, ?, ?, ?, ?)", payload)
     conn.commit()
     conn.close()
     return "Murder2015.db"
-
