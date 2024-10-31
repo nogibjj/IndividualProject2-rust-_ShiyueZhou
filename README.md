@@ -5,6 +5,8 @@
 [![Rust CI/CD Pipeline](https://github.com/nogibjj/IndividualProject2-rust-_ShiyueZhou/actions/workflows/rust.yml/badge.svg)](https://github.com/nogibjj/IndividualProject2-rust-_ShiyueZhou/actions/workflows/rust.yml)
 
 ## Summary
+
+## Video Demo: https://youtu.be/aYo8A4yfoiU [DE-individualproject2.mp4]
 ### Python Project Structure
 ```plaintext
 .
