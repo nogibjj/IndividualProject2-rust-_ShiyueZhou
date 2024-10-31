@@ -73,6 +73,16 @@ In scenarios where data scale and resource demands increase, Rust’s efficient 
 
 This project is a Rust-based ETL (Extract, Transform, Load) command-line tool that performs data extraction, transformation, loading, and querying on an SQLite database. The project demonstrates Rust's memory efficiency and speed and provides functionality for tracking runtime and memory usage across different ETL stages.
 
+### RUST Project  Structure
+```plaintext
+.
+├── src
+│   ├── main.rs               # CLI entry point and argument parsing
+│   └── lib.rs                # Core library with ETL functions
+├── Cargo.toml                # Project manifest
+└── README.md                 # Documentation
+
+```
 ## Project Features
 
 ## 1. Rust Source Code
@@ -113,7 +123,7 @@ The project integrates an SQLite database for data storage, supporting CRUD oper
 - **Delete**: Removes entries from the database.
 
 ## 4. Optimized Rust Binary
-A GitLab CI/CD workflow is configured to build an optimized Rust binary. Compiled in release mode, this binary provides high performance and is available as an artifact for download, allowing efficient execution on various systems.
+A Github CI/CD workflow is configured to build an optimized Rust binary. Compiled in release mode, this binary provides high performance and is available as an artifact for download, allowing efficient execution on various systems.
 
 ## 5. GitHub CI/CD Workflow
 The project includes a GitHub Actions workflow for automation of essential development tasks, enhancing code quality and reliability:
@@ -121,6 +131,8 @@ The project includes a GitHub Actions workflow for automation of essential devel
 - **Rust CI/CD (rust):**Tests, builds, and lints the Rust components, ensuring adherence to best practices.
 
 ## 6. Video
+https://youtu.be/aYo8A4yfoiU
+[DE-individualproject2.mp4]
 
 
 ## RustSQL User Guide:

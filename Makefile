@@ -1,3 +1,4 @@
+# Display Rust tool versions
 rust-version:
 	@echo "Rust command-line utility versions:"
 	rustc --version 			#rust compiler
@@ -6,24 +7,30 @@ rust-version:
 	rustup --version			#rust toolchain manager
 	clippy-driver --version		#rust linter
 
+# Format Rust code
 format:
 	cargo fmt --quiet
 
+# Install necessary tools and update toolchain
 install:
 	# Install if needed
 	#@echo "Updating rust toolchain"
 	#rustup update stable
 	#rustup default stable 
 
+# Lint the project using Clippy
 lint:
 	cargo clippy --quiet
 
+# Run tests
 test:
 	cargo test --quiet
 
+# Run the application in development mode
 run:
 	cargo run
 
+# Build the project in release mode
 release:
 	cargo build --release
 	
